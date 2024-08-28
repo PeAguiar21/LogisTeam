@@ -12,3 +12,7 @@ O Sistema será uma aplicação web que proporciona uma solução completa para 
 - Cadastro de Fornecedores: Adicionar, editar e remover fornecedores com finalidade de vincular a quantidade de estoque solicitada pelo mesmo.
 - Controle de Quantidade: Monitorar e ajustar a quantidade de produtos em estoque com facilidade.
 - Notificações de Estoque: Receber alertas quando os níveis de estoque atingem limites críticos.
+
+## Design do projeto planejado
+
+https://www.figma.com/design/Z1OyJgrtJ3MVcdt68n69VG/LogisTeam?m=auto&t=hJPFwauVZppYGSC9-1
