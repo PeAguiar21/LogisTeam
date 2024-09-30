@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogisTeam</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="scripts.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="./images/Logo.svg" alt="Logo">
+        </div>
+        <nav id="nav-menu">
+            <a href="index.html">Home</a>
+            <a href="cadastro_produto.html">Produtos</a>
+            <a href="cadastro_fornecedores.html" class="active">Fornecedores</a>
+            <a href="controle_estoque.html">Controle de Estoque</a>
+        </nav>
+        <div class="menu-icon" id="menu-icon" onclick="toggleMenu()">
+            &#9776;
+        </div>
+    </header>
+
+    <main>
+        <div class="titlePage">
+            <h1>Cadastro de Fornecedores</h1>
+        </div>
+        <div class="actions">
+            <div class="code-new">
+                <button class="new-btn">Novo</button>
+                <input type="number" min="1" step="1" class="code-page">
+            </div>
+            <button class="delete-btn"></button>
+        </div>
+
+        <div class="product-details">
+            <div class="form-section">
+                <form id="fornecedor-form">
+                    <div class="input-group">
+                        <label for="nome">Nome do Fornecedor:</label>
+                        <input type="text" id="nome" name="nome" placeholder="Digite o nome do fornecedor" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cpfcnpj">CPF/CNPJ:</label>
+                        <input type="text" id="cpfcnpj" name="cpfcnpj" placeholder="Digite o CPF ou CNPJ" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="data-cadastro">Data de Cadastro:</label>
+                        <input type="date" id="data-cadastro" name="data-cadastro" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="contato">Contato:</label>
+                        <input type="text" id="contato" name="contato" placeholder="Digite o número de contato" required>
+                    </div>
+
+                    <div class="actions-footer">
+                        <input type="submit" value="" class="save-btn">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

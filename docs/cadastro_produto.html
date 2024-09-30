@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogisTeam</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="scripts.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="./images/Logo.svg" alt="">
+        </div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="cadastro_produto.html" class="active">Produtos</a>
+            <a href="cadastro_fornecedores.html">Fornecedores</a>
+            <a href="controle_estoque.html">Controle de Estoque</a>
+        </nav>
+        <div class="menu-icon" id="menu-icon">
+            &#9776;
+        </div>
+    </header>
+
+    <main>
+        <div class="titlePage">
+            <h1>Cadastro de Produto</h1>
+        </div>
+        <div class="actions">
+            <div class="code-new">
+                <button class="new-btn">Novo</button>
+                <input type="number" min="1" step="1" class="code-page">
+            </div>
+            <button class="delete-btn"></button>
+        </div>
+
+        <div class="product-details">
+            <form id="produto-form">
+                <div class="row">
+                    <div class="input-group">
+                        <label for="nome">*Nome do Produto:</label>
+                        <input type="text" id="nome" name="nome" placeholder="Digite o nome do produto" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="codigo">*Código do Produto (Barras):</label>
+                        <input type="text" id="codigo" name="codigo" placeholder="Digite o código de barras" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-group">
+                        <label for="preco">*Preço do Produto:</label>
+                        <input type="number" id="preco" name="preco" step="0.01" placeholder="Digite o preço do produto" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="categoria">*Categoria do Produto:</label>
+                        <select id="categoria" name="categoria" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="eletronicos">Eletrônicos</option>
+                            <option value="roupas">Roupas</option>
+                            <option value="alimentos">Alimentos</option>
+                            <option value="moveis">Móveis</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-group">
+                        <label for="quantidade">Quantidade Disponível:</label>
+                        <input type="number" id="quantidade" name="quantidade" disabled value="0" placeholder="Quantidade disponível">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-group">
+                        <label for="descricao">Descrição Técnica:</label>
+                        <textarea id="descricao" name="descricao" rows="4" placeholder="Digite a descrição técnica do produto"></textarea>
+                    </div>
+                </div>
+
+                <div class="actions-footer">
+                    <input type="submit" value="" class="save-btn">
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

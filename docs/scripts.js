@@ -33,3 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function toggleMenu() {
+    const navMenu = document.querySelector('nav');
+    navMenu.classList.toggle('active');
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogisTeam</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="scripts.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="./images/Logo.svg" alt="Logo">
+        </div>
+        <nav id="nav-menu">
+            <a href="index.html">Home</a>
+            <a href="cadastro_produto.html">Produtos</a>
+            <a href="cadastro_fornecedores.html">Fornecedores</a>
+            <a href="controle_estoque.html" class="active">Controle de Estoque</a>
+        </nav>
+        <div class="menu-icon" id="menu-icon" onclick="toggleMenu()">
+            &#9776;
+        </div>
+    </header>
+
+    <main>
+        <div class="titlePage">
+            <h1>Controle de Estoque</h1>
+        </div>
+        <div class="actions">
+            <div class="code-new">
+                <button class="new-btn">Novo</button>
+                <input type="number" min="1" step="1" class="code-page">
+            </div>
+            <button class="delete-btn"></button>
+        </div>
+
+        <div class="product-details">
+            <div class="form-section">
+                <form id="estoque-form">
+                    <div class="input-group">
+                        <label for="produto">Produto:</label>
+                        <input type="text" id="produto" name="produto" placeholder="Nome do Produto" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="descricao-produto">Descrição do Produto:</label>
+                        <textarea id="descricao-produto" name="descricao-produto" rows="4" placeholder="Descrição do Produto" required></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="codigo-fornecedor">Código do Fornecedor:</label>
+                        <input type="text" id="codigo-fornecedor" name="codigo-fornecedor" placeholder="Código do Fornecedor" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="descricao-fornecedor">Descrição do Fornecedor:</label>
+                        <textarea id="descricao-fornecedor" name="descricao-fornecedor" rows="2" placeholder="Descrição do Fornecedor" required></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="quantidade-atual">Quantidade Atual:</label>
+                        <input type="number" id="quantidade-atual" name="quantidade-atual" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="nova-quantidade">Nova Quantidade:</label>
+                        <input type="number" id="nova-quantidade" name="nova-quantidade" required>
+                    </div>
+
+                    <div class="actions-footer">
+                        <input type="submit" value="" class="save-btn">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const menuIcon = document.getElementById('menu-icon');
+        const navbar = document.getElementById('navbar');
+
+        menuIcon.addEventListener('click', () => {
+            navbar.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
