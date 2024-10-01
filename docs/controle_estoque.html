@@ -40,22 +40,24 @@
                 <form id="estoque-form">
                     <div class="input-group">
                         <label for="produto">Produto:</label>
-                        <input type="text" id="produto" name="produto" placeholder="Nome do Produto" required>
+                        <select id="produto" name="produto" required>
+                            <option value=""></option>
+                            <option value="eletronicos">Mouse</option>
+                            <option value="roupas">Gabinete</option>
+                            <option value="alimentos">Teclado</option>
+                            <option value="moveis">Mousepad</option>
+                        </select>
                     </div>
 
                     <div class="input-group">
-                        <label for="descricao-produto">Descrição do Produto:</label>
-                        <textarea id="descricao-produto" name="descricao-produto" rows="4" placeholder="Descrição do Produto" required></textarea>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="codigo-fornecedor">Código do Fornecedor:</label>
-                        <input type="text" id="codigo-fornecedor" name="codigo-fornecedor" placeholder="Código do Fornecedor" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="descricao-fornecedor">Descrição do Fornecedor:</label>
-                        <textarea id="descricao-fornecedor" name="descricao-fornecedor" rows="2" placeholder="Descrição do Fornecedor" required></textarea>
+                        <label for="fornecedor">Fornecedor:</label>
+                        <select id="fornecedor" name="fornecedor" required>
+                            <option value=""></option>
+                            <option value="eletronicos">Fornecedor 1</option>
+                            <option value="roupas">Fornecedor 2</option>
+                            <option value="alimentos">Fornecedor 3</option>
+                            <option value="moveis">Fornecedor 4</option>
+                        </select>
                     </div>
 
                     <div class="input-group">

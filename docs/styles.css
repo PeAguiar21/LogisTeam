@@ -54,6 +54,11 @@ main {
     margin-bottom: 20px;
 }
 
+.field-disponivel {
+    background-color: lightgray;
+    width: 50px;
+}
+
 .new-btn {
     background: linear-gradient(90deg, #ae00ff, #ff5c00);
     border: none;
@@ -98,6 +103,10 @@ main {
     margin-bottom: 5px;
 }
 
+.data-cadastro {
+    text-align: center;
+}
+
 .input-group input,
 .input-group select,
 .input-group textarea {
@@ -107,6 +116,7 @@ main {
     border: 1px solid #ccc;
     font-size: 16px;
 }
+
 
 .code-page {
     width: 50%;
@@ -196,11 +206,9 @@ main {
 }
 
 
-/* CSS geral */
-/* CSS geral */
 header {
     display: flex;
-    justify-content: space-between; /* Espaço entre logo e menu */
+    justify-content: space-between;
     align-items: center;
     padding: 10px;
     background-color: #fff;
@@ -211,11 +219,10 @@ header {
     max-height: 50px;
 }
 
-/* Centraliza o nav */
 nav {
-    display: flex; /* Mostra o nav em telas grandes */
-    justify-content: center; /* Centraliza as guias */
-    flex: 1; /* Permite que o nav ocupe o espaço disponível */
+    display: flex;
+    justify-content: center;
+    flex: 1;
 }
 
 nav a {
@@ -230,52 +237,52 @@ nav a:hover {
     background-color: #f0f0f0;
 }
 
-/* Estilo do ícone do menu */
 .menu-icon {
-    display: none; /* Oculte o ícone por padrão */
+    display: none;
     cursor: pointer;
     font-size: 24px;
     color: #333;
     margin-left: 10px;
 }
 
-/* Mobile Layout */
+
 @media (max-width: 600px) {
     nav {
-        display: none; /* Oculta o nav por padrão em mobile */
-        flex-direction: column; /* As opções das guias em coluna */
+        display: none;
+        flex-direction: column;
         width: 100%;
         background-color: #fff;
         position: absolute;
-        top: 60px; /* Abaixo do header */
+        top: 60px;
         left: 0;
         z-index: 1000;
     }
 
     nav.active {
-        display: flex; /* Mostra o nav quando a classe 'active' está presente */
+        display: flex;
     }
 
     .menu-icon {
-        display: block; /* Mostra o ícone de menu em mobile */
+        display: block;
     }
 }
 
 .row {
     display: flex;
-    flex-direction: row; /* Exibe os campos lado a lado em telas grandes */
-    margin-bottom: 15px; /* Espaço entre os campos */
+    flex-direction: row;
+    margin-bottom: 15px;
+    gap: 5px;
 }
 
-/* Media Query para mobile */
+
 @media (max-width: 600px) {
     .row {
-        flex-direction: column; /* Exibe os campos em coluna em dispositivos móveis */
-        margin-bottom: 15px; /* Espaço entre os campos */
+        flex-direction: column;
+        margin-bottom: 15px;
     }
 
     .input-group {
-        width: 100%; /* Faz com que os campos ocupem toda a largura disponível */
+        width: 100%;
     }
 
     .main {
@@ -286,9 +293,9 @@ nav a:hover {
     input[type="number"],
     select,
     textarea {
-        width: 100%; /* Faz com que todos os campos do formulário ocupem 100% da largura */
-        padding: 10px; /* Adiciona padding para melhor usabilidade */
-        box-sizing: border-box; /* Inclui padding e border na largura total */
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
     }
 }
 

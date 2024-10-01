@@ -38,23 +38,26 @@
         <div class="product-details">
             <div class="form-section">
                 <form id="fornecedor-form">
-                    <div class="input-group">
-                        <label for="nome">Nome do Fornecedor:</label>
-                        <input type="text" id="nome" name="nome" placeholder="Digite o nome do fornecedor" required>
+
+                    <div class="row">
+                        <div class="input-group">
+                            <label for="nome">*Nome do Fornecedor:</label>
+                            <input type="text" id="nome" name="nome" placeholder="Digite o nome do fornecedor" required>
+                        </div>
+    
+                        <div class="input-group">
+                            <label for="cpfcnpj">*CPF/CNPJ:</label>
+                            <input type="text" id="cpfcnpj" name="cpfcnpj" placeholder="Digite o CPF ou CNPJ" required>
+                        </div>
+    
+                        <div class="input-group">
+                            <label for="data-cadastro">Data de Cadastro:</label>
+                            <input style="background-color: lightgray;" type="date" id="data-cadastro" class="data-cadastro " name="data-cadastro" value="" disabled>
+                        </div>
                     </div>
 
                     <div class="input-group">
-                        <label for="cpfcnpj">CPF/CNPJ:</label>
-                        <input type="text" id="cpfcnpj" name="cpfcnpj" placeholder="Digite o CPF ou CNPJ" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="data-cadastro">Data de Cadastro:</label>
-                        <input type="date" id="data-cadastro" name="data-cadastro" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="contato">Contato:</label>
+                        <label for="contato">*Contato:</label>
                         <input type="text" id="contato" name="contato" placeholder="Digite o número de contato" required>
                     </div>
 

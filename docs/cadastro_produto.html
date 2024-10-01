@@ -10,15 +10,15 @@
 <body>
     <header>
         <div class="logo">
-            <img src="./images/Logo.svg" alt="">
+            <img src="./images/Logo.svg" alt="Logo">
         </div>
-        <nav>
+        <nav id="nav-menu">
             <a href="index.html">Home</a>
             <a href="cadastro_produto.html" class="active">Produtos</a>
             <a href="cadastro_fornecedores.html">Fornecedores</a>
             <a href="controle_estoque.html">Controle de Estoque</a>
         </nav>
-        <div class="menu-icon" id="menu-icon">
+        <div class="menu-icon" id="menu-icon" onclick="toggleMenu()">
             &#9776;
         </div>
     </header>
@@ -58,7 +58,7 @@
                     <div class="input-group">
                         <label for="categoria">*Categoria do Produto:</label>
                         <select id="categoria" name="categoria" required>
-                            <option value="">Selecione uma categoria</option>
+                            <option value="eletronicos"></option>
                             <option value="eletronicos">Eletrônicos</option>
                             <option value="roupas">Roupas</option>
                             <option value="alimentos">Alimentos</option>
@@ -70,7 +70,7 @@
                 <div class="row">
                     <div class="input-group">
                         <label for="quantidade">Quantidade Disponível:</label>
-                        <input type="number" id="quantidade" name="quantidade" disabled value="0" placeholder="Quantidade disponível">
+                        <input class="field-disponivel" type="number" id="quantidade" name="quantidade" disabled value="0" placeholder="Quantidade disponível">
                     </div>
                 </div>
 
