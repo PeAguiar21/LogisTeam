@@ -79,10 +79,17 @@ main {
     text-align: left;
     display: flex;
     justify-content: space-between;
+    padding: 10px 20px;
 }
 
 .titlePage {
     text-align: left;
+}
+
+.titlePage h1 {
+    text-align: center;
+    font-size: 24px;
+    margin: 20px 0;
 }
 
 .product-details {
@@ -95,6 +102,7 @@ main {
 .input-group {
     flex: 1;
     margin-right: 20px;
+    margin-bottom: 5px;
 }
 
 .input-group label {
@@ -115,6 +123,7 @@ main {
     border-radius: 20px;
     border: 1px solid #ccc;
     font-size: 16px;
+    margin-bottom: 5px;
 }
 
 
@@ -128,6 +137,42 @@ main {
 
 .code-new {
     display: flex;
+}
+
+.transaction-buttons {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    padding: 8px;
+}
+
+.enter-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    background: linear-gradient(100deg, #ae00ff, #ff5c00);
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    width: 90px;
+    text-align: center;
+}
+
+.frameNewCE {
+    display: flex;
+    gap: 5px;
+}
+
+.saida-btn {
+    border-radius: 20px;
+    padding: 10px 20px;
+    background: white;
+    color: black;
+    cursor: pointer;
+    font-size: 14px;
+    width: 90px;
+    text-align: center;
+    border: 2px solid rgb(192, 190, 190);
 }
 
 .item-number {
@@ -205,6 +250,53 @@ main {
     resize: none; 
 }
 
+.container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    overflow-y: auto;
+    max-height: 500px;
+    border: 2px solid black;
+    border-radius: 25px;
+    margin-right: 20px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.product-list, .supplier-list {
+    list-style: none;
+}
+
+.product-list li, .supplier-list li {
+    margin-bottom: 15px;
+}
+
+.stock-control {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stock-item {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 
 header {
     display: flex;
@@ -245,6 +337,13 @@ nav a:hover {
     margin-left: 10px;
 }
 
+.row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 15px;
+    gap: 5px;
+}
+
 
 @media (max-width: 600px) {
     nav {
@@ -267,36 +366,85 @@ nav a:hover {
     }
 }
 
-.row {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 15px;
-    gap: 5px;
-}
-
-
-@media (max-width: 600px) {
-    .row {
+@media (max-width: 1024px) {
+    .actions {
         flex-direction: column;
-        margin-bottom: 15px;
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .product-details {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .form-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .row{
+        flex-direction: column;
+        gap: 15px;
     }
 
     .input-group {
-        width: 100%;
+        min-width: 100%;
     }
 
-    .main {
-        max-width: 1000px;
+    .input-group input, .input-group select {
+        padding: 2px;
     }
 
-    input[type="text"],
-    input[type="number"],
-    select,
-    textarea {
-        width: 100%;
+    .save-btn {
+        width: 50%;
         padding: 10px;
-        box-sizing: border-box;
     }
+
+    main {
+        max-width: 750px;
+    }
+
+}
+
+@media (max-width: 1366px) {
+    main {
+        max-width: 900px;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .actions {
+        padding: 10px;
+        margin: 5px;
+    }
+
+    .transaction-buttons{
+        justify-content: center;
+    }
+    
+    .container {
+        flex-direction: column;
+    }
+
+    .card {
+        width: 85%;
+    }
+
+    .product-details {
+        padding: 10px;
+    }
+
+    .input-group input, .input-group select, .input-group textarea {
+        font-size: 14px;
+        padding: 2px;
+    }
+
+    main {
+        max-width: 300px;
+    }
+
 }
 
 
