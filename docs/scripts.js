@@ -3,15 +3,24 @@ document.addEventListener('DOMContentLoaded', function () {
                  document.getElementById('fornecedor-form') || 
                  document.getElementById('estoque-form');
 
+    const deleteButton = document.querySelector('.delete-btn');
+
     if (form) {
         form.addEventListener('submit', async function (event) {
             event.preventDefault();
 
-            const formData = new FormData(form);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
+            const formData = new FormData(event.target);
+
+            const data = {
+                id: document.getElementById('id').value,
+                nome: formData.get('nome'),
+                codigo: formData.get('codigo'),
+                preco: parseFloat(formData.get('preco')),
+                categoria: formData.get('categoria'),
+                descricao: formData.get('descricao') || '',
+                quantidade: parseInt(formData.get('quantidade')) || 0,
+            };
+        
 
             let targetUrl = '';
             let method = 'POST';
@@ -43,12 +52,95 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 const result = await response.json();
-                console.log('Success:', result);
-                form.reset();
+                Toastify({
+                    text: "Registro salvo com sucesso",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: "linear-gradient(to right, #006400, #007200",
+                      },
+                    stopOnFocus: true
+                }).showToast();
             } catch (error) {
                 console.error('Error:', error);
             }
 
+        });
+
+        deleteButton.addEventListener('click', async () => {
+            const productId = document.querySelector('.code-page').value;
+
+            if (!productId) {
+                Toastify({
+                    text: "Acrescente o código do registro que deseja excluir!",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: "linear-gradient(to right, #ba181b, #e5383b",
+                      },
+                    stopOnFocus: true
+                }).showToast();
+                return;
+            }
+
+            let targetUrl = '';
+
+            if (form.id === 'produto-form') {
+                targetUrl = 'http://localhost:3322/produtos';
+            } else if (form.id === 'fornecedor-form') {
+                targetUrl = 'http://localhost:3322/fornecedores';
+            } else if (form.id === 'estoque-form') {
+                targetUrl = 'http://localhost:3322/inventario';
+            }
+    
+            try {
+                const response = await fetch(`${targetUrl}/${productId}`, {
+                    method: 'DELETE',
+                });
+    
+                const result = await response.json();
+    
+                if (response.ok) {
+                    Toastify({
+                        text: "Registro excluído com sucesso",
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        style: {
+                            background: "linear-gradient(to right, #006400, #007200",
+                          },
+                        stopOnFocus: true
+                    }).showToast();
+                    form.reset();
+                    document.querySelector('.code-page').value = ''
+                } else {
+                    Toastify({
+                        text: result.error || "Erro ao excluir o registro.",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "center",
+                        style: {
+                            background: "linear-gradient(to right, #ba181b, #e5383b",
+                          },
+                    }).showToast();
+                }
+            } catch (error) {
+                console.error(error);
+                Toastify({
+                    text: "Erro ao conectar com o servidor.",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "center",
+                    style: {
+                        background: "linear-gradient(to right, #ba181b, #e5383b",
+                      },
+                }).showToast();
+            }
         });
     }
 
