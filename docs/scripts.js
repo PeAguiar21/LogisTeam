@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
                  document.getElementById('estoque-form');
 
     if (form) {
-        form.addEventListener('submit', function (event) {
+        form.addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const formData = new FormData(form);
@@ -14,34 +14,41 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             let targetUrl = '';
+            let method = 'POST';
+
             if (form.id === 'produto-form') {
-                targetUrl = 'http://localhost:3322/produtos';
+                if (!isNewRegister) {
+                    targetUrl = `http://localhost:3322/produtos/${codeInput.value}`;
+                    method = 'PUT';
+                } else {
+                    targetUrl = 'http://localhost:3322/produtos';
+                }
             } else if (form.id === 'fornecedor-form') {
                 targetUrl = 'http://localhost:3322/fornecedores';
             } else if (form.id === 'estoque-form') {
                 targetUrl = 'http://localhost:3322/inventario';
             }
 
-            fetch(targetUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Erro: ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(result => {
-                    console.log('Success:', result);
-                    form.reset();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+            try {
+                const response = await fetch(targetUrl, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
                 });
+
+                if (!response.ok) {
+                    throw new Error(`Erro: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('Success:', result);
+                form.reset();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+
         });
     }
 
@@ -58,16 +65,41 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const codeInput = document.querySelector('.code-page');
+    const nameInput = document.getElementById('nome');
     const formFields = document.querySelectorAll('#produto-form input, #produto-form select, #produto-form textarea');
     const apiUrl = 'http://localhost:3322/produtos';
 
+    let isNewRegister = false
+
     formFields.forEach(field => {
-        field.disabled = true;
+        if (!field.classList.contains('field-disponivel')) { 
+            field.disabled = true;
+        }
     });
+
+    function preencherCamposComProduto(produto) {
+        if (produto) {
+            document.getElementById('nome').value = produto.nome || '';
+            document.getElementById('codigo').value = produto.codigoDeBarras || '';
+            document.getElementById('preco').value = produto.preco || '';
+            document.getElementById('categoria').value = produto.categoria || '';
+            document.getElementById('quantidade').value = produto.quantidade || 0;
+            document.getElementById('descricao').value = produto.descricaoTecnica || '';
+        }
+    }
+
+    function limparCamposProdutos() {
+        document.getElementById('nome').value =  '';
+        document.getElementById('codigo').value =  '';
+        document.getElementById('preco').value = '';
+        document.getElementById('categoria').value = 'eletronicos';
+        document.getElementById('quantidade').value = 0;
+        document.getElementById('descricao').value = '';
+    }
 
     async function checkProductExists(id) {
         try {
-            const response = await fetch(`${apiUrl}/${id}`);
+            const response = await fetch(`${apiUrl}/getProduto/${id}`);
             if (response.ok) {
                 const data = await response.json();
                 return data;
@@ -87,22 +119,44 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!id) {
             return;
         }
-    
+
         const produto = await checkProductExists(id);
         if (produto) {
-            alert('Produto já existe! Por favor, edite ou insira outro ID.');
+            formFields.forEach(field => {
+                if (!field.classList.contains('field-disponivel')) {
+                    field.disabled = false;
+                }
+            });
+            preencherCamposComProduto(produto);
+            isNewRegister = false
         } else {
-            alert('Produto não encontrado. Campo será limpo.');
+            Toastify({
+                text: "Produto não encontrado, clicar no botão Novo!",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                style: {
+                    background: "linear-gradient(to right, #ba181b, #e5383b",
+                  },
+                stopOnFocus: true
+            }).showToast();
+            formFields.forEach(field => {
+                if (!field.classList.contains('field-disponivel')) {
+                    field.disabled = true;
+                }
+            });
             codeInput.value = '';
+            limparCamposProdutos()
         }
     });
 
     const newButton = document.querySelector('.new-btn');
 
-    if (newButton && codeInput) {
+    if (newButton) {
         newButton.addEventListener('click', async () => {
             try {
-                const response = await fetch(`${apiUrl}/ultimo`);
+                const response = await fetch(`${apiUrl}/getProdutoUltimo`);
                 if (!response.ok) {
                     throw new Error(`Erro ao buscar o último código: ${response.statusText}`);
                 }
@@ -110,15 +164,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 const data = await response.json();
                 if (data && data.ultimoCodigo) {
                     codeInput.value = data.ultimoCodigo;
-                    codeInput.focus();
-                } else {
-                    alert('Nenhum produto encontrado no banco de dados.');
+
+                    if (nameInput) {
+                        nameInput.focus();
+                    }
+
+                    
+                    formFields.forEach(field => {
+                        if (!field.classList.contains('field-disponivel')) {
+                            field.disabled = false;
+                        }
+                    });
+
+                    isNewRegister = true
+
+                    limparCamposProdutos()
                 }
             } catch (error) {
                 console.error('Erro ao buscar o último código:', error);
-                alert('Erro ao buscar o último código. Tente novamente.');
             }
         });
     }
-
 });
