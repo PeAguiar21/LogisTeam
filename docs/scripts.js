@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const deleteButton = document.querySelector('.delete-btn');
 
+    let tipoOperacao = '';
+
+    function setTipoOperacao(tipo) {
+        tipoOperacao = tipo;
+        calcularNovaQuantidade();
+    }
+
+
     if (form) {
         if (form.id === 'produto-form') {
             apiUrl = 'http://localhost:3322/produtos';
@@ -19,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (form.id === 'estoque-form') {
             apiUrl = 'http://localhost:3322/inventario';
             getRegistro = 'getEstoque'
+            setTipoOperacao('entrada');
         }
         form.addEventListener('submit', async function (event) {
             event.preventDefault();
@@ -28,6 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
             let data = {}
             let targetUrl = '';
             let method = 'POST';
+
+            console.log(formData)
 
             if (form.id === 'produto-form') {
                 if (!isNewRegister) {
@@ -60,7 +71,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     contato: formData.get('contato')
                 };
             } else if (form.id === 'estoque-form') {
-                targetUrl = 'http://localhost:3322/inventario';
+                if (!isNewRegister) {
+                    targetUrl = `http://localhost:3322/inventario/${codeInput.value}`;
+                    method = 'PUT';
+                } else {
+                    targetUrl = 'http://localhost:3322/inventario';
+                }
+                data = {
+                    id: document.getElementById('id').value,
+                    produtoNome: formData.get('produto'),
+                    fornecedorNome: formData.get('fornecedor'),
+                    quantidade: formData.get('quantidade'),
+                    tipo: tipoOperacao === `entrada` ? 1 : 0
+                };
             }
 
             try {
@@ -181,12 +204,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const codeInput = document.querySelector('.code-page');
     const nameInput = document.getElementById('nome');
-    const formFields = document.querySelectorAll('#produto-form input, #produto-form select, #produto-form textarea,#fornecedor-form input, #fornecedor-form select, #fornecedor-form textarea ');
+    const formFields = document.querySelectorAll('#produto-form input, #produto-form select, #produto-form textarea,#fornecedor-form input, #fornecedor-form select, #fornecedor-form textarea,#estoque-form input, #estoque-form select, #estoque-form textarea, #estoque-form button ');
 
     let isNewRegister = false
 
     formFields.forEach(field => {
-        if (!field.classList.contains('field-disponivel') || !field.classList.contains('data-cadastro')) { 
+        if (!field.classList.contains('field-disponivel') || !field.classList.contains('data-cadastro') || !field.classList.contains('quantidade-atual') || !field.classList.contains('nova-quantidade')) { 
             field.disabled = true;
         }
     });
@@ -224,6 +247,29 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('nome').value =  '';
         document.getElementById('cpfcnpj').value =  '';
         document.getElementById('contato').value = '';
+    }
+
+    function preencherCamposComInventario(inventario) {
+        if (inventario) {
+            document.getElementById('produto').value = inventario.produtoNome || '';
+            document.getElementById('fornecedor').value = inventario.fornecedorNome || '';
+            document.getElementById('quantidade').value = inventario.quantidade || 0;
+
+            console.log(inventario.tipo)
+            if (inventario.tipo === 1) {
+                setTipoOperacao('entrada')
+            } else {
+                setTipoOperacao('saida')
+            }
+        }
+    }
+
+    function limparCamposInventario() {
+        document.getElementById('produto').value = '';
+        document.getElementById('fornecedor').value = '';
+        document.getElementById('quantidade').value =  '';
+        document.getElementById('nova-quantidade').value =  '';
+        document.getElementById('quantidade-atual').value = '';
     }
 
     async function checkRegistro(id) {
@@ -322,7 +368,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 limparCamposFornecedores()
             }
         } else {
-
+            const Inventario = await checkRegistro(id);
+            if (Inventario) {
+                formFields.forEach(field => {
+                    if (!field.classList.contains('quantidade-atual') && 
+                    !field.classList.contains('nova-quantidade')) {
+                    field.disabled = true;
+                }
+                });
+                preencherCamposComInventario(Inventario);
+                isNewRegister = false
+            } else {
+                Toastify({
+                    text: "Inventario não encontrado, clicar no botão Novo!",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: "linear-gradient(to right, #ba181b, #e5383b",
+                      },
+                    stopOnFocus: true
+                }).showToast();
+                formFields.forEach(field => {
+                    if (!field.classList.contains('quantidade-atual') && 
+                    !field.classList.contains('nova-quantidade')) {
+                    field.disabled = true;
+                }
+                });
+                codeInput.value = '';
+                limparCamposInventario()
+            }
         }
     });
 
@@ -362,7 +438,13 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         });
                     } else if (getRegistro === 'getEstoque') {
-
+                        limparCamposInventario()
+                        formFields.forEach(field => {
+                            if (!field.classList.contains('quantidade-atual') && 
+                            !field.classList.contains('nova-quantidade')) {
+                            field.disabled = false;
+                        }
+                        });
                     }
                     
                 }
@@ -440,4 +522,142 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchProducts();
         fetchFornecedores();
     }
+
+    function toggleButtons(activeButton, inactiveButton) {
+        activeButton.classList.add('active-btn');
+        activeButton.classList.remove('inactive-btn');
+
+        inactiveButton.classList.add('inactive-btn');
+        inactiveButton.classList.remove('active-btn');
+    }
+
+    if (getRegistro === 'getEstoque') {
+
+        const entradaBtn = document.getElementById('enter-btn');
+        const saidaBtn = document.getElementById('saida-btn');
+
+        
+        carregarDadosSelectProduto();
+        carregarDadosSelectFornecedor();
+
+        const produtoSelect = document.getElementById('produto');
+        const fornecedorSelect = document.getElementById('fornecedor');
+    
+        let dadosProdutos = [];
+    
+        entradaBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            toggleButtons(entradaBtn, saidaBtn);
+            setTipoOperacao('entrada')
+            calcularNovaQuantidade();
+        });
+    
+        saidaBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            toggleButtons(saidaBtn, entradaBtn);
+            setTipoOperacao('saida')
+            calcularNovaQuantidade();
+        });
+    
+        async function carregarDadosSelectProduto() {
+            try {
+                const response = await fetch('http://localhost:3322/produtos');
+                const dados = await response.json();
+    
+                dadosProdutos = dados;
+    
+                produtoSelect.innerHTML = '';
+
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '-- Selecione um produto --';
+                produtoSelect.appendChild(defaultOption);
+
+                dados.forEach(produto => {
+                    const option = document.createElement('option');
+                    option.value = produto.nome;
+                    option.textContent = produto.nome;
+                    produtoSelect.appendChild(option);
+                });
+    
+            } catch (error) {
+                console.error('Erro ao carregar os dados:', error);
+            }
+        }
+    
+        async function carregarDadosSelectFornecedor() {
+            try {
+                const response = await fetch('http://localhost:3322/fornecedores');
+                const dados = await response.json();
+    
+                fornecedorSelect.innerHTML = '';
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '-- Selecione um fornecedor --';
+                fornecedorSelect.appendChild(defaultOption);
+                dados.forEach(fornecedor => {
+                    const option = document.createElement('option');
+                    option.value = fornecedor.nome;
+                    option.textContent = fornecedor.nome;
+                    fornecedorSelect.appendChild(option);
+                });
+    
+            } catch (error) {
+                console.error('Erro ao carregar os dados:', error);
+            }
+        }
+    
+        function exibirQuantidadeAtual() {
+            const produtoSelecionado = produtoSelect.value;
+            const produto = dadosProdutos.find(p => p.nome === produtoSelecionado);
+        
+            if (produto) {
+                document.getElementById('quantidade-atual').value = produto.quantidade || 0;
+                document.getElementById('nova-quantidade').value = '';
+            }
+
+            calcularNovaQuantidade()
+        }
+    
+    
+        produtoSelect.addEventListener('change', exibirQuantidadeAtual);
+        document.getElementById('quantidade').addEventListener('input', calcularNovaQuantidade)
+    }
+
+    function calcularNovaQuantidade() {
+        const quantidadeAtual = parseInt(document.getElementById('quantidade-atual').value);
+        const quantidadeInserida = parseInt(document.getElementById('quantidade').value);
+        let novaQuantidade;
+    
+        if (!quantidadeInserida || isNaN(quantidadeInserida)) {
+            novaQuantidade = 0
+        }; 
+    
+        
+    
+        if (tipoOperacao === 'entrada') {
+            novaQuantidade = quantidadeAtual + quantidadeInserida;
+        } else if (tipoOperacao === 'saida') {
+            if (quantidadeInserida > quantidadeAtual) {
+                Toastify({
+                    text: "Estoque insuficiente para a saída!",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: "linear-gradient(to right, #ba181b, #e5383b",
+                      },
+                    stopOnFocus: true
+                }).showToast();
+                document.getElementById('nova-quantidade').value = quantidadeAtual;
+                document.getElementById('quantidade').value = 0;
+                return;
+            }
+            novaQuantidade = quantidadeAtual - quantidadeInserida;
+        }
+    
+        document.getElementById('nova-quantidade').value = novaQuantidade;
+    }
+
 });
