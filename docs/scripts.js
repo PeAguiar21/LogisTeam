@@ -25,13 +25,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (form) {
         if (form.id === 'produto-form') {
-            apiUrl = 'http://localhost:3322/produtos';
+            apiUrl = 'https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/produtos';
             getRegistro = 'getProduto'
         } else if (form.id === 'fornecedor-form') {
-            apiUrl = 'http://localhost:3322/fornecedores';
+            apiUrl = 'https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/fornecedores';
             getRegistro = 'getFornecedor'
         } else if (form.id === 'estoque-form') {
-            apiUrl = 'http://localhost:3322/inventario';
+            apiUrl = 'https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/inventario';
             getRegistro = 'getEstoque'
             setTipoOperacao('entrada');
         }
@@ -48,10 +48,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (form.id === 'produto-form') {
                 if (!isNewRegister) {
-                    targetUrl = `http://localhost:3322/produtos/${codeInput.value}`;
+                    targetUrl = `https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/produtos/${codeInput.value}`;
                     method = 'PUT';
                 } else {
-                    targetUrl = 'http://localhost:3322/produtos';
+                    targetUrl = 'https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/produtos';
                 }
                 data = {
                     id: document.getElementById('id').value,
@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
             } else if (form.id === 'fornecedor-form') {
                 if (!isNewRegister) {
-                    targetUrl = `http://localhost:3322/fornecedores/${codeInput.value}`;
+                    targetUrl = `https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/fornecedores/${codeInput.value}`;
                     method = 'PUT';
                 } else {
-                    targetUrl = 'http://localhost:3322/fornecedores';
+                    targetUrl = 'https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/fornecedores';
                 }
                 data = {
                     id: document.getElementById('id').value,
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     contato: formData.get('contato')
                 };
             } else if (form.id === 'estoque-form') {
-                targetUrl = 'http://localhost:3322/inventario';
+                targetUrl = 'https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/inventario';
                 data = {
                     id: document.getElementById('id').value,
                     produtoNome: formData.get('produto'),
@@ -141,11 +141,11 @@ document.addEventListener('DOMContentLoaded', function () {
             let targetUrl = '';
 
             if (form.id === 'produto-form') {
-                targetUrl = 'http://localhost:3322/produtos';
+                targetUrl = 'https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/produtos';
             } else if (form.id === 'fornecedor-form') {
-                targetUrl = 'http://localhost:3322/fornecedores';
+                targetUrl = 'https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/fornecedores';
             } else if (form.id === 'estoque-form') {
-                targetUrl = 'http://localhost:3322/inventario';
+                targetUrl = 'https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/inventario';
             }
     
             try {
@@ -476,7 +476,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const fetchProducts = async () => {
         try {
-            const response = await fetch('http://localhost:3322/produtos');
+            const response = await fetch('https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/produtos');
             if (!response.ok) {
                 throw new Error('Erro ao buscar produtos.');
             }
@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const fetchFornecedores = async () => {
         try {
-            const response = await fetch('http://localhost:3322/fornecedores');
+            const response = await fetch('https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/fornecedores');
             if (!response.ok) {
                 throw new Error('Erro ao buscar fornecedores.');
             }
@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const fetchEstoque = async () => {
     try {
-        const response = await fetch('http://localhost:3322/inventario'); 
+        const response = await fetch('https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/inventario'); 
         if (!response.ok) {
             throw new Error('Erro ao buscar estoque.');
         }
@@ -592,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function carregarDadosSelectProduto() {
         try {
-            const response = await fetch('http://localhost:3322/produtos');
+            const response = await fetch('https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/produtos');
             const dados = await response.json();
 
             dadosProdutos = dados;
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function carregarDadosSelectFornecedor() {
         try {
-            const response = await fetch('http://localhost:3322/fornecedores');
+            const response = await fetch('https://sheltered-sea-75529-2af45a0da60c.herokuapp.com/fornecedores');
             const dados = await response.json();
 
             fornecedorSelect.innerHTML = '';
