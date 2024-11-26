@@ -584,95 +584,70 @@ document.addEventListener('DOMContentLoaded', function () {
         inactiveButton.classList.remove('active-btn');
     }
 
-    if (getRegistro === 'getEstoque') {
+    const entradaBtn = document.getElementById('enter-btn');
+    const saidaBtn = document.getElementById('saida-btn');
+    const produtoSelect = document.getElementById('produto');
+    const fornecedorSelect = document.getElementById('fornecedor');
+    let dadosProdutos = [];
 
-        const entradaBtn = document.getElementById('enter-btn');
-        const saidaBtn = document.getElementById('saida-btn');
+    async function carregarDadosSelectProduto() {
+        try {
+            const response = await fetch('http://localhost:3322/produtos');
+            const dados = await response.json();
 
-        
-        carregarDadosSelectProduto();
-        carregarDadosSelectFornecedor();
+            dadosProdutos = dados;
 
-        const produtoSelect = document.getElementById('produto');
-        const fornecedorSelect = document.getElementById('fornecedor');
-    
-        let dadosProdutos = [];
-    
-        entradaBtn.addEventListener('click', (event) => {
-            toggleButtons(entradaBtn, saidaBtn);
-            setTipoOperacao('entrada')
-            calcularNovaQuantidade();
-        });
-    
-        saidaBtn.addEventListener('click', (event) => {
-            toggleButtons(saidaBtn, entradaBtn);
-            setTipoOperacao('saida')
-            calcularNovaQuantidade();
-        });
-    
-        async function carregarDadosSelectProduto() {
-            try {
-                const response = await fetch('http://localhost:3322/produtos');
-                const dados = await response.json();
-    
-                dadosProdutos = dados;
-    
-                produtoSelect.innerHTML = '';
+            produtoSelect.innerHTML = '';
 
-                const defaultOption = document.createElement('option');
-                defaultOption.value = '';
-                defaultOption.textContent = '-- Selecione um produto --';
-                produtoSelect.appendChild(defaultOption);
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = '-- Selecione um produto --';
+            produtoSelect.appendChild(defaultOption);
 
-                dados.forEach(produto => {
-                    const option = document.createElement('option');
-                    option.value = produto.nome;
-                    option.textContent = produto.nome;
-                    produtoSelect.appendChild(option);
-                });
-    
-            } catch (error) {
-                console.error('Erro ao carregar os dados:', error);
-            }
+            dados.forEach(produto => {
+                const option = document.createElement('option');
+                option.value = produto.nome;
+                option.textContent = produto.nome;
+                produtoSelect.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error('Erro ao carregar os dados:', error);
         }
-    
-        async function carregarDadosSelectFornecedor() {
-            try {
-                const response = await fetch('http://localhost:3322/fornecedores');
-                const dados = await response.json();
-    
-                fornecedorSelect.innerHTML = '';
-                const defaultOption = document.createElement('option');
-                defaultOption.value = '';
-                defaultOption.textContent = '-- Selecione um fornecedor --';
-                fornecedorSelect.appendChild(defaultOption);
-                dados.forEach(fornecedor => {
-                    const option = document.createElement('option');
-                    option.value = fornecedor.nome;
-                    option.textContent = fornecedor.nome;
-                    fornecedorSelect.appendChild(option);
-                });
-    
-            } catch (error) {
-                console.error('Erro ao carregar os dados:', error);
-            }
-        }
-    
-        function exibirQuantidadeAtual() {
-            const produtoSelecionado = produtoSelect.value;
-            const produto = dadosProdutos.find(p => p.nome === produtoSelecionado);
-        
-            if (produto) {
-                document.getElementById('quantidade-atual').value = produto.quantidade || 0;
-                document.getElementById('nova-quantidade').value = '';
-            }
+    }
 
-            calcularNovaQuantidade()
+    async function carregarDadosSelectFornecedor() {
+        try {
+            const response = await fetch('http://localhost:3322/fornecedores');
+            const dados = await response.json();
+
+            fornecedorSelect.innerHTML = '';
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = '-- Selecione um fornecedor --';
+            fornecedorSelect.appendChild(defaultOption);
+            dados.forEach(fornecedor => {
+                const option = document.createElement('option');
+                option.value = fornecedor.nome;
+                option.textContent = fornecedor.nome;
+                fornecedorSelect.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error('Erro ao carregar os dados:', error);
         }
+    }
+
+    function exibirQuantidadeAtual() {
+        const produtoSelecionado = produtoSelect.value;
+        const produto = dadosProdutos.find(p => p.nome === produtoSelecionado);
     
-    
-        produtoSelect.addEventListener('change', exibirQuantidadeAtual);
-        document.getElementById('quantidade').addEventListener('input', calcularNovaQuantidade)
+        if (produto) {
+            document.getElementById('quantidade-atual').value = produto.quantidade || 0;
+            document.getElementById('nova-quantidade').value = '';
+        }
+
+        calcularNovaQuantidade()
     }
 
     function calcularNovaQuantidade() {
@@ -683,8 +658,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!quantidadeInserida || isNaN(quantidadeInserida)) {
             novaQuantidade = 0
         }; 
-    
-        
     
         if (tipoOperacao === 'entrada') {
             novaQuantidade = quantidadeAtual + quantidadeInserida;
@@ -709,6 +682,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     
         document.getElementById('nova-quantidade').value = novaQuantidade;
+    }
+
+    if (getRegistro === 'getEstoque') {
+
+        carregarDadosSelectProduto();
+        carregarDadosSelectFornecedor();
+    
+        entradaBtn.addEventListener('click', (event) => {
+            toggleButtons(entradaBtn, saidaBtn);
+            setTipoOperacao('entrada')
+            calcularNovaQuantidade();
+        });
+    
+        saidaBtn.addEventListener('click', (event) => {
+            toggleButtons(saidaBtn, entradaBtn);
+            setTipoOperacao('saida')
+            calcularNovaQuantidade();
+        });
+    
+        produtoSelect.addEventListener('change', exibirQuantidadeAtual);
+        document.getElementById('quantidade').addEventListener('input', calcularNovaQuantidade)
     }
 
 });
