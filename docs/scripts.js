@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded', function () {
         calcularNovaQuantidade();
     }
 
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    const currentDate = `${year}-${month}-${day}`;
+
 
     if (form) {
         if (form.id === 'produto-form') {
@@ -71,18 +77,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     contato: formData.get('contato')
                 };
             } else if (form.id === 'estoque-form') {
-                if (!isNewRegister) {
-                    targetUrl = `http://localhost:3322/inventario/${codeInput.value}`;
-                    method = 'PUT';
-                } else {
-                    targetUrl = 'http://localhost:3322/inventario';
-                }
+                targetUrl = 'http://localhost:3322/inventario';
                 data = {
                     id: document.getElementById('id').value,
                     produtoNome: formData.get('produto'),
                     fornecedorNome: formData.get('fornecedor'),
                     quantidade: formData.get('quantidade'),
-                    tipo: tipoOperacao === `entrada` ? 1 : 0
+                    tipo: tipoOperacao === `entrada` ? 1 : 0,
+                    dataCadastro: currentDate,
+                    novaQuantidade : document.getElementById('nova-quantidade').value
                 };
             }
 
@@ -109,6 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
                       },
                     stopOnFocus: true
                 }).showToast();
+                codeInput.value = ''
+                form.reset()
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -200,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (dataCadastro) {
             dataCadastro.value = currentDate;
         }
+        dataAtual = currentDate
     };
 
     const codeInput = document.querySelector('.code-page');
@@ -250,17 +256,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function preencherCamposComInventario(inventario) {
+        const entradaBtn = document.getElementById('enter-btn');
+        const saidaBtn = document.getElementById('saida-btn');
         if (inventario) {
             document.getElementById('produto').value = inventario.produtoNome || '';
             document.getElementById('fornecedor').value = inventario.fornecedorNome || '';
             document.getElementById('quantidade').value = inventario.quantidade || 0;
-
-            console.log(inventario.tipo)
             if (inventario.tipo === 1) {
                 setTipoOperacao('entrada')
+                toggleButtons(entradaBtn, saidaBtn);
             } else {
                 setTipoOperacao('saida')
+                toggleButtons(saidaBtn, entradaBtn);
             }
+        }
+
+        function toggleButtons(activeButton, inactiveButton) {
+            activeButton.classList.add('active-btn');
+            activeButton.classList.remove('inactive-btn');
+    
+            inactiveButton.classList.add('inactive-btn');
+            inactiveButton.classList.remove('active-btn');
         }
     }
 
@@ -268,8 +284,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('produto').value = '';
         document.getElementById('fornecedor').value = '';
         document.getElementById('quantidade').value =  '';
-        document.getElementById('nova-quantidade').value =  '';
-        document.getElementById('quantidade-atual').value = '';
+        document.getElementById('nova-quantidade').value =  0;
+        document.getElementById('quantidade-atual').value = 0;
     }
 
     async function checkRegistro(id) {
@@ -367,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 codeInput.value = '';
                 limparCamposFornecedores()
             }
-        } else {
+        } else if (getRegistro === 'getEstoque')  {
             const Inventario = await checkRegistro(id);
             if (Inventario) {
                 formFields.forEach(field => {
@@ -456,6 +472,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const productList = document.querySelector('.product-list');
     const supplierList = document.querySelector('.supplier-list');
+    const stockList = document.querySelector('.stock-control');
 
     const fetchProducts = async () => {
         try {
@@ -518,9 +535,45 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
+    const fetchEstoque = async () => {
+    try {
+        const response = await fetch('http://localhost:3322/inventario'); 
+        if (!response.ok) {
+            throw new Error('Erro ao buscar estoque.');
+        }
+        const estoque = await response.json();
+        stockList.innerHTML = '';
+
+        if (estoque.length === 0) {
+            const noRecordsMessage = document.createElement('div');
+            noRecordsMessage.textContent = 'Nenhum item de estoque cadastrado.';
+            noRecordsMessage.style.fontStyle = 'italic';
+            noRecordsMessage.style.color = 'gray';
+            stockList.appendChild(noRecordsMessage);
+        } else {
+            estoque.forEach(item => {
+                const stockItem = document.createElement('div');
+                stockItem.classList.add('stock-item');
+                stockItem.innerHTML = `
+                    <img class="img-home" src="./images/Holding_Box.svg" alt=""> 
+                    <p><strong>Produto:</strong> ${item.produtoNome}</p>
+                    <p><strong>Fornecedor:</strong> ${item.fornecedorNome}</p>
+                    <p><strong>Tipo:</strong> ${item.tipo === 1 ? 'Entrada' : 'Saída'}</p>
+                    <p><strong>Quantidade:</strong> ${item.quantidade}</p>
+                    <p><strong>Data:</strong> ${new Date(item.dataCadastro).toLocaleDateString()}</p>
+                `;
+                stockList.appendChild(stockItem);
+            });
+        }
+    } catch (error) {
+        console.error('Erro:', error.message);
+    }
+};
+
     if (!getRegistro) {
-        fetchProducts();
-        fetchFornecedores();
+        fetchProducts()
+        fetchFornecedores()
+        fetchEstoque()
     }
 
     function toggleButtons(activeButton, inactiveButton) {
@@ -546,14 +599,12 @@ document.addEventListener('DOMContentLoaded', function () {
         let dadosProdutos = [];
     
         entradaBtn.addEventListener('click', (event) => {
-            event.preventDefault();
             toggleButtons(entradaBtn, saidaBtn);
             setTipoOperacao('entrada')
             calcularNovaQuantidade();
         });
     
         saidaBtn.addEventListener('click', (event) => {
-            event.preventDefault();
             toggleButtons(saidaBtn, entradaBtn);
             setTipoOperacao('saida')
             calcularNovaQuantidade();
